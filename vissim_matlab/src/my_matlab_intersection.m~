@@ -191,24 +191,23 @@ classdef my_matlab_intersection < matlab.mixin.SetGet
         end
         %% g-Adaptive Max-Weight policy
         % qlen_vector is a N_link-by-1 vector of queue length of each link
-        % Under this policy, pressure = queue length
         function [phase_id, scheduled_phase, weighted_qlen_vector] = gAdaptiveMW(obj, qlen_vector, all_links, mapObj, pressure, weight, current_phase, weighted_pressure, gamma, delta)        
             pressure_per_phase = zeros(obj.N_phases,1);
-            %links_matlab_id = cell2mat(values(mapObj,num2cell(obj.links_in)));
+            links_matlab_id = cell2mat(values(mapObj,num2cell(obj.links_in)));
             weighted_qlen_vector = qlen_vector.*weight;
             for i=1:obj.N_links
                 current_link_matlab_id = cell2mat(values(mapObj,{obj.links_in(i)}));
                 current_link = all_links{current_link_matlab_id};
                 x = weighted_qlen_vector(cell2mat(values(mapObj,{obj.links_in(i)})));
                 pressure(current_link_matlab_id) = x;
-                weighted_pressure(current_link_matlab_id) = x*current_link.capacity; % TODO: Do we still need this?
+                weighted_pressure(current_link_matlab_id) = x*current_link.capacity;
             end
             for j=1:obj.N_phases
-                pressure_per_phase(j) = sum(weighted_pressure(cell2mat(values(mapObj,num2cell(obj.phases{j}))))); 
+                pressure_per_phase(j) = sum(weighted_qlen_vector(cell2mat(values(mapObj,num2cell(obj.phases{j}))))); 
             end
-            [max_pressure_per_phase, phase_id] = max(pressure_per_phase);
-            delta_weight_per_phase = max_pressure_per_phase - pressure_per_phase(current_phase);
-            if delta_weight_per_phase < gfunc(gamma, delta, max_pressure_per_phase)
+            [max_weight_per_phase, phase_id] = max(weight_per_phase);
+            delta_weight_per_phase = max_weight_per_phase - weight_per_phase(current_phase);
+            if delta_weight_per_phase < gfunc(gamma, delta, max_weight_per_phase)
                 phase_id = current_phase;
             end
             scheduled_phase = obj.phases{phase_id};

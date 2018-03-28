@@ -1,9 +1,12 @@
+%% VISSIM Simulation for Networked Transposrtation Systems
 clear;
+
+%% 1. VISSIM COM configuration
 format compact;
 vissim_com=actxserver('VISSIM.vissim');
 %vissim_com.LoadNet('C:\Users\jiaojian\Desktop\JAN\timevar_pattern.inp');
-vissim_com.LoadNet('C:\Users\jiaojian\Desktop\JAN\2800_net.inp');
-vissim_com.LoadLayout('C:\Users\jiaojian\Desktop\JAN\vissim.ini');
+vissim_com.LoadNet('..\config\2800_net.inp');
+vissim_com.LoadLayout('..\config\vissim.ini');
 sim=vissim_com.simulation;
 timestep=1;
 sim.Resolution=timestep;
@@ -15,7 +18,7 @@ vehins=vnet.VehicleInputs;
 %datapoint_1=datapoints.GetDataCollectionByNumber(1);
 
 
-%% Instantiate VISSIM COM signal objects 
+%% 2. Instantiate VISSIM COM signal objects 
 scs=vnet.signalcontrollers;
 N_sc = 6;
 N_sgs = 4;
@@ -30,7 +33,7 @@ for j=1:N_sc
     end
 end
 
-%% Instantiate VISSIM COM link objects
+%% 3. Instantiate VISSIM COM link objects
 simT = 1800;
 N_links = 48;
 N_intersections = 6;
@@ -51,16 +54,17 @@ phase_to_be_scheduled = zeros(N_intersections, 1);
 switchover_state = zeros(N_intersections, 1);
 total_qlen = zeros(simT, 1);
 
-%% Specify parameters for BMP/MP/VFMP policy
+%% 4. Specify parameters for BMP/MP/VFMP/gAdaptiveMW policy
 alpha = 0.01;  
 beta_1 = 0.99;
 beta_2 = 0.9;
 superframe_end = 0;
 scaling = 2;  % not in use
 %policy = 'BMP';
-policy = 'MP';
+%policy = 'MP';
 %policy = 'VFMP';
 %policy = 'VFMW';
+policy = 'g-Adaptive';
 %policy = 'Mixed';
 %policy_vec = {'BMP', 'BMP', 'BMP', 'Fixed-Time', 'Fixed-Time', 'Fixed-Time'};
 policy_vec = {'MP', 'MP', 'MP', 'Fixed-Time', 'Fixed-Time', 'Fixed-Time'};
@@ -68,6 +72,10 @@ tau_k =1;
 frame_count = zeros(N_intersections, 1);
 updated_frame_count = 0;
 as_default = 0;
+
+% For gAdaptiveMW
+gamma = 0.1;
+delta = 0.01;
 
 %% create link objects and intersection objects in Matlab
 [all_links, all_intersections, mapObj, total_arrival_rate, service_count, qlen_weight] = init_smart_network_vissim(sat_flow, scaling, policy);
@@ -179,7 +187,10 @@ for i=1:simT
             case 'VFMW'
                 [scheduled_phase_id, scheduled_phase, weighted_pressure_vector, updated_frame_count] = all_intersections{m}.vfmw(qlen_vector, all_links, mapObj, pressure_vector, qlen_weight, current_phase(m), weighted_pressure_vector, Ts, beta_2, frame_count(m), superframe_end);
                 frame_count(m) = updated_frame_count;
-                as_default = 0;    
+                as_default = 0; 
+            case 'g-Adaptive'
+                [scheduled_phase_id, scheduled_phase, weighted_pressure_vector] = all_intersections{m}.gAdaptiveMW(qlen_vector, all_links, mapObj, pressure_vector, qlen_weight, current_phase(m), weighted_pressure_vector, gamma, delta);            
+                as_default = 0;
             case 'Mixed'
                 if strcmp(policy_vec{m}, 'BMP')
                     [scheduled_phase_id, scheduled_phase, weighted_pressure_vector, F] = all_intersections{m}.bmp(qlen_vector, all_links, mapObj, pressure_vector, qlen_weight, current_phase(m), weighted_pressure_vector, Ts, alpha, superframe_end);                     
