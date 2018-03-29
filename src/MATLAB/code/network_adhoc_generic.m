@@ -547,12 +547,13 @@ for i = 1:iteration
         %[decision, frame_remained] = VFMW_TSLS(server_location, current_jobs, frame_remained, prob_on_channel, current_TSLS, gamma);
         %[decision, frame_remained] = VFMW_TSLSx(server_location, current_jobs, frame_remained, prob_on_channel, current_TSLS, gamma);
         %[decision, frame_remained] = MW_Adhoc_inertia(nPhase, feasible_phase, server_location, current_jobs, beta);
-        [decision, frame_remained] = MWLA_Adhoc(nPhase, feasible_phase, server_location, current_jobs, frame_remained, prob_on_channel, beta, IDLE_ON, IDLE_MAX);
+        %[decision, frame_remained] = MWLA_Adhoc(nPhase, feasible_phase, server_location, current_jobs, frame_remained, prob_on_channel, beta, IDLE_ON, IDLE_MAX);
         %[decision, frame_remained] = LDF_Adhoc_inertia(nPhase, feasible_phase, server_location, current_debt, beta);
         %[decision, frame_remained] = MaxHoL_Adhoc_inertia(nPhase, feasible_phase, server_location, current_jobs, HoL_age, lambda);
         %decision = FixedTime(nPhase, cycle, split, current_tid);
         %[decision, frame_remained, frame_track] = VFMW_Adhoc_diff_lim(nPhase, feasible_phase, server_location, current_jobs, frame_remained, HoL_age, lambda, IDLE_ON, IDLE_MAX, frame_count);
         %[decision, frame_remained, frame_track] = MaxWeight_Adhoc_lim(nPhase, feasible_phase, server_location, current_jobs, frame_remained, prob_on_channel, beta, frame_count);
+        [decision, frame_remained] = gAdaptiveMW(nPhase, feasible_phase, server_location, current_jobs, frame_remained, prob_on_channel, beta, IDLE_ON, IDLE_MAX);
         
         % Count the length of the current schedule
         frame_count = frame_track;
