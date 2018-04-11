@@ -1,0 +1,24 @@
+
+Network Performance
+
+File:     d:\jan\1200_net.inp
+Comment:  
+Date:     Tuesday, January 03, 2017 5:34:51 PM
+VISSIM:   5.40-13 [48219]
+
+Simulation time from 0.0 to 1800.0.
+
+ Parameter                                                             ;          Value;
+ Average delay time per vehicle [s], All Vehicle Types                 ;         67.515;
+ Average number of stops per vehicles, All Vehicle Types               ;          2.110;
+ Average speed [mph], All Vehicle Types                                ;         24.535;
+ Average stopped delay per vehicle [s], All Vehicle Types              ;         46.242;
+ Total delay time [h], All Vehicle Types                               ;         79.349;
+ Total Distance Traveled [mi], All Vehicle Types                       ;       5269.022;
+ Latent delay time [h], All Vehicle Types                              ;          0.000;
+ Latent demand, All Vehicle Types                                      ;          0;
+ Number of Stops, All Vehicle Types                                    ;       8929;
+ Number of vehicles in the network, All Vehicle Types                  ;        435;
+ Number of vehicles that have left the network, All Vehicle Types      ;       3796;
+ Total stopped delay [h], All Vehicle Types                            ;         54.347;
+ Total travel time [h], All Vehicle Types                              ;        214.757;

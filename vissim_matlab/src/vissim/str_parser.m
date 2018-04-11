@@ -1,0 +1,41 @@
+%function str_parser(filepath)
+%% VISSIM Str file parser
+% File format
+% [t,  Link, SegStC, SegEndC, Density(0), Volume(0)] 
+N_links = 82;
+QL_vec = zeros(N_links, 1);
+SegLength_vec = zeros(N_links, 1); % unit: feet
+Density_vec = zeros(N_links, 1);  % unit: veh/mile
+mile_to_ft = 5280;
+%filepath = '.\1000_net_mixed_QL.str';
+%filepath = '.\2200_net_vfmp_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\bmp\2200_net_bmp_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\fix\2200_net_fix_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\mixed\1000_net_mixed_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\mp\2200_net_mp_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\bmp\timevar2200phv_bmp_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\mixed\timevar2200phv_mixed_QL.str';
+%filepath = 'C:\Users\jiaojian\Desktop\JAN\Results\fix\timevar2200phv_fix_QL.str';
+filepath = 'C:\Users\jiaojian\Desktop\JAN\MATLAB\str_files\timevar_pattern_mp_QL.str';
+delimiterIn_str = '\t';
+headerlinesIn_str = 1;
+str_data = csvread(filepath);
+simT = floor(size(str_data,1)/N_links);
+links_to_be_excluded = [36, 37, 39, 27, 4, 20, 16, 12, 8, 34];
+Total_QL_vec = zeros(simT, 1);
+
+for t=1:simT
+    start_row = 1 + (t-1)*N_links; 
+    end_row = t*N_links;
+    excluded_rows = (t-1)*N_links + links_to_be_excluded;
+    QL_excluded = sum(str_data(excluded_rows,4).*str_data(excluded_rows,5));
+    Total_QL_vec(t) = 1/mile_to_ft*(sum(str_data(start_row:end_row,4).*str_data(start_row:end_row,5)) - QL_excluded);
+end
+
+%% Plotting
+spacing = 45;
+N_points = floor(simT/spacing);
+time_index = spacing*(1:1:N_points);
+createfigure([0, time_index], [0; Total_QL_vec(time_index)]);
+
+%end
