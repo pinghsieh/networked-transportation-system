@@ -24,7 +24,7 @@ qlen_vector = zeros(N_links, 1);
 %Delta_qlen_vector = zeros(N_links, 1);
 pressure_vector = zeros(N_links, 1);
 weighted_pressure_vector = zeros(N_links, 1);
-weight_vector = ones(N_links, 1);
+%weight_vector = ones(N_links, 1);
 amber_counter = zeros(N_intersections, 1);
 allred_counter = zeros(N_intersections, 1);
 current_phase = ones(N_intersections, 1);
@@ -51,7 +51,7 @@ total_qlen = zeros(simT, 1);
 time_vec = 1:1:simT;
 
 %% create link objects and intersection objects in Matlab
-[all_links, all_intersections, mapObj, total_arrival_rate, service_count, qlen_weight] = init_smart_network(saturation_flow, arrival_rate_scaling, policy);
+[all_links, all_intersections, mapObj, total_arrival_rate, service_count, weight_vector] = init_smart_network(saturation_flow, arrival_rate_scaling, policy);
 
 
 

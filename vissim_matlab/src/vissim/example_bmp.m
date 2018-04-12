@@ -11,6 +11,8 @@ sim=vissim_com.simulation;
 timestep=1;
 sim.Resolution=timestep;
 eval=vissim_com.Evaluation;
+% To output VISSIM statistics, the value should be set to '1' first and
+% then set to '0'
 eval.set('AttValue', 'netperformance', '0');
 vnet=vissim_com.net;
 vehins=vnet.VehicleInputs;

@@ -204,7 +204,7 @@ classdef my_matlab_intersection < matlab.mixin.SetGet
                 weighted_pressure(current_link_matlab_id) = x*current_link.capacity; % TODO: Do we still need this?
             end
             for j=1:obj.N_phases
-                pressure_per_phase(j) = sum(weighted_pressure(cell2mat(values(mapObj,num2cell(obj.phases{j}))))); 
+                pressure_per_phase(j) = sum(pressure(cell2mat(values(mapObj,num2cell(obj.phases{j}))))); 
             end
             [max_pressure_per_phase, phase_id] = max(pressure_per_phase);
             delta_weight_per_phase = max_pressure_per_phase - pressure_per_phase(current_phase);
